@@ -1,12 +1,13 @@
 import Joi from "joi";
 import Product from "../models/product";
+import productSchema from "../shemas/product";
 
-const productSchema = Joi.object({
-   name : Joi.string().required(),
-   price : Joi.number().required(),
-   description : Joi.string(),
+// const productSchema = Joi.object({
+//    name : Joi.string().required(),
+//    price : Joi.number().required(),
+//    description : Joi.string(),
 
-});
+// });
 
 export const getAll = async (req, res) => {
     try {
@@ -26,7 +27,7 @@ export const getAll = async (req, res) => {
   
 export const get = async function(req,res) {
     try {
-        const product = await Product.find(req.params.id);
+        const product = await Product.findById(req.params.id);
         if(!product) {
             return res.json({
                 message : "không có sản phẩm nào",
@@ -48,7 +49,7 @@ export const create = async function(req,res) {
                 message: error.details[0].message,
             });
         }
-        const product = await Product.find(req.body);
+        const product = await Product.create(req.body);
         if(!product) {
             return res.json({
                 message : "thêm sản phẩm thành công !   ",
@@ -73,9 +74,7 @@ export const updatePatch = async function (req, res) {
                 message : error.details[0].message,
             });
         }
-        const product = await Product.findByIdAndUpdate(req.params.id,req.body)({
-            new : true,
-        });
+        const product = await Product.findByIdAndUpdate(req.params.id,req.body);
         if(!product){
             return res.json ({
                 message : "cập nhật sản phẩm không thành công ",
